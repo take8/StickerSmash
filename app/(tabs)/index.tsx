@@ -1,5 +1,6 @@
 import * as ImagePicker from 'expo-image-picker';
-import { useState } from 'react';
+import * as MediaLibrary from 'expo-media-library';
+import { useEffect, useState } from 'react';
 import { ImageSourcePropType, StyleSheet, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
@@ -14,6 +15,7 @@ import ImageViewer from '@/components/ImageViewer';
 const PlaceholderImage = require('@/assets/images/background-image.png');
 
 export default function Index() {
+  const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
   const [selectedImage, setSelectedImage] = useState<string | undefined>(
     undefined,
   );
@@ -53,6 +55,12 @@ export default function Index() {
   const onSaveImageAsync = async () => {
     // we will implement this later
   };
+
+  useEffect(() => {
+    if (!permissionResponse?.granted) {
+      requestPermission();
+    }
+  }, []);
 
   return (
     <GestureHandlerRootView style={styles.container}>
